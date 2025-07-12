@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandala do AMAR</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general aesthetics */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to start to allow scrolling if content is long */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 1rem; /* Rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            max-width: 900px; /* Max width for better readability */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .input-group label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .input-group input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            outline: none;
+            transition: opacity .2s;
+        }
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4f46e5; /* Indigo */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .input-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #4f46e5; /* Indigo */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .input-group .value-display {
+            text-align: right;
+            font-weight: 500;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px; /* Fixed height for the chart */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* To stack chart and button */
+            gap: 1rem; /* Space between chart and button */
+        }
+        .group-heading {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* gray-900 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+            border-bottom: 2px solid #e5e7eb; /* border-b-2 border-gray-200 */
+            padding-bottom: 0.5rem; /* pb-2 */
+        }
+        .export-button {
+            background-color: #10b981; /* Emerald green */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: none;
+            outline: none;
+        }
+        .export-button:hover {
+            background-color: #059669; /* Darker emerald green */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+            .questions-section {
+                flex: 1;
+                padding-right: 2rem;
+            }
+            .chart-section {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    </style>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="questions-section w-full md:w-1/2">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center md:text-left">Mandala do AMAR</h2>
+            <form id="quizForm" class="space-y-6">
+
+                <!-- Grupo 1: AUTOESTIMA -->
+                <h3 class="group-heading">1. AUTOESTIMA</h3>
+                <!-- Question 1.1 -->
+                <div class="input-group">
+                    <label for="q1">1.1. Autoimagem: O quanto você se sente segura com o seu corpo?</label>
+                    <input type="range" id="q1" name="q1" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q1-value">Valor: 5</div>
+                </div>
+                <!-- Question 1.2 -->
+                <div class="input-group">
+                    <label for="q2">1.2. Amor Próprio: O quanto você se ama independentemente do reconhecimento e amor externos?</label>
+                    <input type="range" id="q2" name="q2" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q2-value">Valor: 5</div>
+                </div>
+                <!-- Question 1.3 -->
+                <div class="input-group">
+                    <label for="q3">1.3. Talentos: O quanto você reconhece seus dons, talentos e habilidades?</label>
+                    <input type="range" id="q3" name="q3" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q3-value">Valor: 5</div>
+                </div>
+
+                <!-- Grupo 2: MEMÓRIAS -->
+                <h3 class="group-heading">2. MEMÓRIAS</h3>
+                <!-- Question 2.1 -->
+                <div class="input-group">
+                    <label for="q4">2.1. Ex namorados: O quanto você já superou as suas relações amorosas do passado?</label>
+                    <input type="range" id="q4" name="q4" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q4-value">Valor: 5</div>
+                </div>
+                <!-- Question 2.2 -->
+                <div class="input-group">
+                    <label for="q5">2.2. Pai e Mãe: O quanto você se vê agindo diferente (para melhor) do que seus pais se relacionaram amorosamente entre si?</label>
+                    <input type="range" id="q5" name="q5" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q5-value">Valor: 5</div>
+                </div>
+                <!-- Question 2.3 -->
+                <div class="input-group">
+                    <label for="q6">2.3. Eu do Passado: O quanto você se sente em paz com a sua versão do passado no que se refere à sua maneira de se relacionar amorosamente?</label>
+                    <input type="range" id="q6" name="q6" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q6-value">Valor: 5</div>
+                </div>
+
+                <!-- Grupo 3: ARMADURA -->
+                <h3 class="group-heading">3. ARMADURA</h3>
+                <!-- Question 3.1 -->
+                <div class="input-group">
+                    <label for="q7">3.1. Coragem: O quanto você tem coragem de se abrir para o amor?</label>
+                    <input type="range" id="q7" name="q7" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q7-value">Valor: 5</div>
+                </div>
+                <!-- Question 3.2 -->
+                <div class="input-group">
+                    <label for="q8">3.2. Desejo: O quanto você deseja ser vista/acessada/amada?</label>
+                    <input type="range" id="q8" name="q8" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q8-value">Valor: 5</div>
+                </div>
+                <!-- Question 3.3 -->
+                <div class="input-group">
+                    <label for="q9">3.3. Merecimento: O quanto você se sente merecedora de ser amada?</label>
+                    <input type="range" id="q9" name="q9" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q9-value">Valor: 5</div>
+                </div>
+
+                <!-- Grupo 4: RESSIGNIFICAR -->
+                <h3 class="group-heading">4. RESSIGNIFICAR</h3>
+                <!-- Question 4.1 -->
+                <div class="input-group">
+                    <label for="q10">4.1. Parceiro: O quanto de clareza você tem sobre que tipo de parceiro quer atrair?</label>
+                    <input type="range" id="q10" name="q10" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q10-value">Valor: 5</div>
+                </div>
+                <!-- Question 4.2 -->
+                <div class="input-group">
+                    <label for="q11">4.2. Entrega: O quanto de clareza você tem sobre o que está disposta a doar?</label>
+                    <input type="range" id="q11" name="q11" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q11-value">Valor: 5</div>
+                </div>
+                <!-- Question 4.3 -->
+                <div class="input-group">
+                    <label for="q12">4.3. Clareza Emocional: O quanto você sabe a respeito de como quer se sentir nesta relação?</label>
+                    <input type="range" id="q12" name="q12" min="0" max="10" value="5" class="w-full">
+                    <div class="value-display" id="q12-value">Valor: 5</div>
+                </div>
+            </form>
+        </div>
+
+        <div class="chart-section w-full md:w-1/2">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Gráfico de Radar</h2>
+            <div class="chart-container">
+                <canvas id="radarChart"></canvas>
+                <button id="exportChartBtn" class="export-button">Exportar Gráfico</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array of labels for the radar chart, corresponding to the new questions
+        const labels = [
+            'Autoimagem', 'Amor Próprio', 'Talentos',
+            'Ex namorados', 'Pai e Mãe', 'Eu do Passado',
+            'Coragem', 'Desejo', 'Merecimento',
+            'Parceiro', 'Entrega', 'Clareza Emocional'
+        ];
+
+        // Initial data for the chart (all values set to 5)
+        const initialData = Array(12).fill(5);
+
+        let radarChart; // Variable to hold the Chart.js instance
+
+        // Function to get the color based on the value
+        function getColorForValue(value, isBackground) {
+            let color;
+            if (value >= 0 && value <= 1) {
+                color = isBackground ? 'rgba(255, 99, 132, 0.4)' : 'rgba(255, 99, 132, 1)'; // Red
+            } else if (value >= 2 && value <= 4) {
+                color = isBackground ? 'rgba(255, 206, 86, 0.4)' : 'rgba(255, 206, 86, 1)'; // Yellow
+            } else if (value >= 5 && value <= 7) {
+                color = isBackground ? 'rgba(54, 162, 235, 0.4)' : 'rgba(54, 162, 235, 1)'; // Blue
+            } else if (value >= 8 && value <= 10) {
+                color = isBackground ? 'rgba(75, 192, 192, 0.4)' : 'rgba(75, 192, 192, 1)'; // Green
+            } else {
+                color = isBackground ? 'rgba(128, 128, 128, 0.4)' : 'rgba(128, 128, 128, 1)'; // Default gray for unexpected values
+            }
+            return color;
+        }
+
+        // Function to initialize or update the radar chart
+        function updateRadarChart(data) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+
+            // Generate background and border colors based on data values
+            const backgroundColors = data.map(value => getColorForValue(value, true));
+            const borderColors = data.map(value => getColorForValue(value, false));
+            const pointBackgroundColors = data.map(value => getColorForValue(value, false)); // Use border color for points
+            const pointBorderColors = Array(data.length).fill('#fff'); // White border for points
+
+            if (radarChart) {
+                // If chart already exists, update its data and colors
+                radarChart.data.datasets[0].data = data;
+                radarChart.data.datasets[0].backgroundColor = backgroundColors;
+                radarChart.data.datasets[0].borderColor = borderColors;
+                radarChart.data.datasets[0].pointBackgroundColor = pointBackgroundColors;
+                radarChart.data.datasets[0].pointBorderColor = pointBorderColors;
+                radarChart.update();
+            } else {
+                // If chart doesn't exist, create a new one
+                radarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pontuação',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
+                            borderWidth: 2,
+                            pointBackgroundColor: pointBackgroundColors,
+                            pointBorderColor: pointBorderColors,
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: (context) => getColorForValue(context.raw, false) // Use specific color on hover
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // Allow chart to fill container
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    color: '#e5e7eb' // Light gray lines
+                                },
+                                grid: {
+                                    color: '#d1d5db' // Slightly darker gray grid
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    },
+                                    color: '#4b5563' // Darker text for labels
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 10,
+                                ticks: {
+                                    stepSize: 1, // Show ticks for each whole number
+                                    color: '#6b7280', // Gray text for ticks
+                                    backdropColor: 'rgba(255, 255, 255, 0.7)', // White background for ticks
+                                    backdropPadding: {
+                                        x: 2,
+                                        y: 2
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#374151', // Darker text for legend
+                                    font: {
+                                        size: 14
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Get all range input elements
+        const rangeInputs = document.querySelectorAll('input[type="range"]');
+
+        // Add event listener to each range input
+        rangeInputs.forEach(input => {
+            input.addEventListener('input', (event) => {
+                const value = event.target.value;
+                const id = event.target.id;
+                document.getElementById(`${id}-value`).textContent = `Valor: ${value}`;
+
+                // Collect all current values in the order of the labels array
+                const currentData = [
+                    parseInt(document.getElementById('q1').value),  // Autoimagem
+                    parseInt(document.getElementById('q2').value),  // Amor Próprio
+                    parseInt(document.getElementById('q3').value),  // Talentos
+                    parseInt(document.getElementById('q4').value),  // Ex namorados
+                    parseInt(document.getElementById('q5').value),  // Pai e Mãe
+                    parseInt(document.getElementById('q6').value),  // Eu do Passado
+                    parseInt(document.getElementById('q7').value),  // Coragem
+                    parseInt(document.getElementById('q8').value),  // Desejo
+                    parseInt(document.getElementById('q9').value),  // Merecimento
+                    parseInt(document.getElementById('q10').value), // Parceiro
+                    parseInt(document.getElementById('q11').value), // Entrega
+                    parseInt(document.getElementById('q12').value)  // Clareza Emocional
+                ];
+                updateRadarChart(currentData);
+            });
+        });
+
+        // Function to export the chart as an image
+        function exportChartAsImage() {
+            const canvas = document.getElementById('radarChart');
+            if (canvas) {
+                // Create a temporary link element
+                const link = document.createElement('a');
+                // Set the download filename to "Mandala do AMAR.png"
+                link.download = 'Mandala do AMAR.png';
+                // Get the image data from the canvas
+                link.href = canvas.toDataURL('image/png');
+                // Programmatically click the link to trigger the download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // Get the export button and add an event listener
+        const exportButton = document.getElementById('exportChartBtn');
+        if (exportButton) {
+            exportButton.addEventListener('click', exportChartAsImage);
+        }
+
+        // Initialize the chart with default values when the page loads
+        window.onload = () => {
+            updateRadarChart(initialData);
+        };
+    </script>
+</body>
+</html>
